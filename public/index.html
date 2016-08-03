@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+
+<link rel="stylesheet" type="text/css" href="trcgrid.css">
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="bundle.js"></script>
+<script>
+    // plugin startup shim
+    var _pluginModule = require('pluginmain');
+    
+    // Global reference to the current sheet;
+    var _plugin = null;
+
+    // Common error handler
+    function showError(error) {
+        $("#_errors").html("<pre style='color:red'>Error on load:" + error + "</pre>");
+        $("#_errorbtn").show();
+    }
+    function clearError() {
+        $("#_errors").empty();
+        $("#_errorbtn").hide();
+    }
+
+    // This is a well-known entry point. It's called by the hosting infrastructure.
+    function PluginMain(sheetRef, opts) {                
+
+        _pluginModule.MyPlugin.BrowserEntryAsync(sheetRef, opts).then(
+            function(plugin) {
+                // Success 
+                _plugin = plugin;            
+                $("#_loadingmsg").hide();  
+                $("#_mainbody").show(); // activate main controls
+            }
+        ).catch(function(error) {
+            // Error case. Display message and Keep main body hiden. 
+            $("#_loadingmsg").hide();  
+            showError(error);
+        });
+    }
+</script>
+<script src="https://trcanvasdata.blob.core.windows.net/code2/plugin.js"></script>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Basic TRC plugin</title>
+</head>
+<body>
+    <div id="_loadingmsg">
+        <img src="https://trcanvasdata.blob.core.windows.net/code2/loading.gif">
+    </div>
+    <span id="_errors">
+    </span>
+    <span id="_errorbtn" style="display:none">
+        <button onclick="clearError()">Clear error</button>
+    </span>
+    <div id="_mainbody"  style="display:none">
+        <p>
+            This is an empty TRC plugin that demonstrates calling PluginMain().
+        </p>
+        <p>
+            See <a href="https://github.com/Voter-Science/TrcLibNpm">https://github.com/Voter-Science/TrcLibNpm</a> for more information on writing plugions.
+        </p>
+
+        <h2>Basic sheet information:</h2>
+        <table>
+            <tr><td>Name:</td><td><div id="SheetName"></div></td></tr>
+            <tr><td>Parent:</td><td><div id="ParentSheetName"></div></td></tr>
+            <tr><td>Version:</td><td><div id="SheetVer"></div></td></tr>
+            <tr><td>Total Rows:</td><td><div id="RowCount"></div></td></tr>
+            <tr><td>Last refreshed:</td><td><div id="LastRefreshed"></div></td></tr>
+        </table> 
+        <div id="locInfo">
+        </div>
+
+        <button onclick="_plugin.onClickRefresh()">Refresh!</button>
+
+        <button onclick="_plugin.onGetSheetContents()">GetSheetContents!</button>
+        <div id="contents">
+
+        <p>Congratulations! You made your first TRC plugin!</p>
+        </div>
+    </div>
+</body>
+</html>
