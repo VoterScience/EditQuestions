@@ -1,15 +1,16 @@
 ﻿<!DOCTYPE html>
-
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
     crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="trcgrid.css">
-
+<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous"> -->
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
 <script src="bundle.js"></script>
 <script>
     // plugin startup shim
     var _pluginModule = require('pluginmain');
-
     // Global reference to the current sheet;
     var _plugin = null;
 
@@ -25,30 +26,39 @@
 
     // This is a well-known entry point. It's called by the hosting infrastructure.
     function PluginMain(sheetRef, opts) {
-
         _pluginModule.MyPlugin.BrowserEntryAsync(sheetRef, opts).then(
             function (plugin) {
-                // Success 
+                // Success
                 _plugin = plugin;
                 $("#_loadingmsg").hide();
                 $("#_mainbody").show(); // activate main controls
             }
         ).catch(function (error) {
-            // Error case. Display message and Keep main body hiden. 
+            // Error case. Display message and Keep main body hiden.
             $("#_loadingmsg").hide();
             showError(error);
         });
     }
+   var questIndex = 0;
+   function onAddmoreQuest()
+    {
+        questIndex++;
+        var newDiv = $("#newques");
+        var div = "<br/><div id='new" + questIndex + "'><a style='cursor: pointer;float:right;' onclick='removeButton(" + questIndex + ")' id='remove[" + questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
+        newDiv.append(div);
+    }
+    function removeButton(Id)
+    {
+       questIndex--;
+       $( "#new"+Id ).remove();
+    }
 </script>
 <script src="https://trcanvasdata.blob.core.windows.net/code2/plugin.js"></script>
-
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <title>Survey Editor</title>
 </head>
-
 <body>
     <div id="_loadingmsg">
         <img src="https://trcanvasdata.blob.core.windows.net/code2/loading.gif">
@@ -58,50 +68,139 @@
     <span id="_errorbtn" style="display:none">
         <button onclick="clearError()">Clear error</button>
     </span>
-
     <div class="container">
         <div id="_mainbody" style="display:none">
-            <h1>
-                Survey Editor
-            </h1>
-
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1>
+                        Survey Editor
+                    </h1>
+                </div>
+            </div>
             <div id="polling">
-                <p>Sheet is refreshing ... Please wait ... </p>
-                <img src="https://trcanvasdata.blob.core.windows.net/code2/loading.gif">
+                    <p>Sheet is refreshing ... Please wait ... </p>
+                    <img src="https://trcanvasdata.blob.core.windows.net/code2/loading.gif">
             </div>
-            <div id="contents" style="display:none">
+
+        <div class="row">
+            <div class="col-sm-12">
                 <h2>Add a new question:</h2>
-                <p>
-                    <input id="qname" placeholder="(slug)"> (required, Short name, made of just A-Z,0-9,_ ) </p>
-                <p>
-                    <input id="qdescr" placeholder="(description)" size=80> (optional, Human readable description)</p>
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#oneQuest" data-toggle="tab">View</a>
+                        </li>
+                        <li>
+                            <a href="#multipleQuest" data-toggle="tab">As Text</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="oneQuest">
+                        <br/>
+                        <div class="row panel panel-default" >
+                            <div class="col-sm-12">
+                                <br/>
+                                <p><input id="qname" placeholder="(slug)"> (required, Short name, made of just A-Z,0-9,_ )
+                                </p>
+                                <p>
+                                   <input id="qdescr" placeholder="(description)" size=80> (optional, Human readable description)</p>
+                                    <p>Possible Answers:</p>
+                                    <ul>
+                                        <li>
+                                            <input id="Answer1" placeholder="(answer)" size=40>
+                                        </li>
+                                        <br/>
+                                        <li>
+                                            <input id="Answer2" placeholder="(answer)" size=40>
+                                        </li>
+                                        <br/>
+                                        <li>
+                                            <input id="Answer3" placeholder="(answer)" size=40>
+                                        </li>
+                                        <br/>
+                                        <li>
+                                            <input id="Answer4" placeholder="(answer)" size=40>
+                                        </li>
+                                        <br/>
+                                        <li>
+                                            <input id="Answer5" placeholder="(answer)" size=40>
+                                        </li>
+                                        <br/>
+                                    </ul>
+                                    <button onclick="_plugin.onAddQuestion()" class="btn btn-primary">Add Question!</button>
+                                     <br/>
+                                    <br/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="multipleQuest">
+                            <br/>
+                            <div class="row panel panel-default">
+                                <form name="qdata" id="qdata" onsubmit="return false" method="post" >
+                                    <div id="newques" class="col-sm-12">
+                                        <br/>
+                                            <p>
+                                                <input id="qname0" placeholder="(slug)" value=""> (required, Short name, made of just A-Z,0-9,_ ) </p>
+                                            <p>
+                                                <input id="qdescr0" placeholder="(description)" size=80> (optional, Human readable description)</p>
+                                            <p>Possible Answers:</p>
+                                            <ul>
+                                                <li>
+                                                    <input id="Answer1-0" placeholder="(answer)" size=40>
+                                                </li>
+                                                <br/>
+                                                <li>
+                                                    <input id="Answer2-0" placeholder="(answer)" size=40>
+                                                </li>
+                                                <br/>
+                                                <li>
+                                                    <input id="Answer3-0" placeholder="(answer)" size=40>
 
-                <p>Possible Answers:</p>
-                <ul>
-                    <li>
-                        <input id="Answer1" placeholder="(answer)" size=40>
-                    </li>
-                    <li>
-                        <input id="Answer2" placeholder="(answer)" size=40>
-                    </li>
-                    <li>
-                        <input id="Answer3" placeholder="(answer)" size=40>
-                    </li>
-                    <li>
-                        <input id="Answer4" placeholder="(answer)" size=40>
-                    </li>
-                    <li>
-                        <input id="Answer5" placeholder="(answer)" size=40>
-                    </li>
-                </ul>
+                                                </li>
+                                                <br/>
+                                                <li>
+                                                    <input id="Answer4-0" placeholder="(answer)" size=40>
 
-                <button onclick="_plugin.onAddQuestion()" class="btn btn-primary">Add Question!</button>
+                                                </li>
+                                                <br/>
+                                                <li>
+                                                    <input id="Answer5-0" placeholder="(answer)" size=40>
 
-                <h2>Existing questions:</h2>
-                <div id="existing"></div>
-            </div>
-        </div>
+                                                </li>
+                                            </ul>
+                                    </div>
+                                    <br/>
+                                    <div  class="col-sm-12">
+                                         <a onclick="onAddmoreQuest()" style="cursor: pointer;" title="Add More Questions"><span class="glyphicon glyphicon-plus"></span></a>
+                                         <br/>
+                                         <br/>
+                                        <button onclick="_plugin.onAddMultipleQuestion(questIndex)"  class="btn btn-primary"> Apply </button>
+                                        <br/>
+                                        <br/>
+                                   </div>
+                                </form>
+                            </div>
+                          <br/>
+                        </div>
+                        <h3> </h3>
+                   </div>
+                   <h2>Existing questions:</h2>
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#view" data-toggle="tab">View</a>
+                        </li>
+                        <li>
+                            <a href="#text" data-toggle="tab">Text</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="view">
+                        <div id="existing"></div>
+                        </div>
+                        <div class="tab-pane" id="text"><pre><div  id="viewText"></div></pre>
+                        </div>
+                       </div>
+                    </div>
+           </div>
     </div>
 </body>
-
 </html>
