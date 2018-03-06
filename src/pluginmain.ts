@@ -107,7 +107,7 @@ export class MyPlugin {
                     if (desc) {
                         viewText += '|'+desc;
                     }
-                    
+
                     var ans = '' ;
                     if (answers) {
 
@@ -128,7 +128,7 @@ export class MyPlugin {
                     }
                 }
                 if (answers) {
-                    
+
                     var text = "[" + name + "]";
                     if (desc) {
                         text += " " + desc;
@@ -150,11 +150,13 @@ export class MyPlugin {
                         e2.append(elementAnswer);
                     }
                      eBody.append(e2);
-                    
+
                 }
-               
-                e1.append(eBody);
-                root.append(e1);
+
+                if (e1) {
+                    e1.append(eBody);
+                    root.append(e1);
+                }
             }
         }
 
@@ -185,9 +187,13 @@ export class MyPlugin {
 
         var add = this.validateQuestion(qname, qdescr, answers);
 
-        var questions = [add];
+        if (add) {
+            var questions = [add];
 
-        this.AddQuestionInSheet(questions);
+            this.AddQuestionInSheet(questions);
+        } else {
+            return;
+        }
     }
 
     private validateQuestion(qname: string, qdescr: string, answers: any): any {
@@ -239,11 +245,16 @@ export class MyPlugin {
     public onAddMultipleQuestion(questIndex:number): void {
 
         let questions = new Array();
-        for ( let i: number = 0; i <= questIndex; i++) {
+        for (let i: number = 0; i <= questIndex; i++) {
 
                 var answers: string[] = [];
                 var qname = $("#qname"+i).val();
                 var qdescr = $("#qdescr"+i).val();
+
+                if (!qname) {
+                    alert('Error: Question shortname is missing');
+                    return;
+                }
 
                 var answers: string[] = [];
                 MyPlugin.AddAnswer(answers, "Answer1-"+i);
@@ -253,7 +264,11 @@ export class MyPlugin {
                 MyPlugin.AddAnswer(answers, "Answer5-"+i);
 
                 var add = this.validateQuestion(qname, qdescr, answers);
-                questions.push(add);
+                if (add) {
+                    questions.push(add);
+                } else {
+                    return;
+                }
         }
         this.AddQuestionInSheet(questions);
     }
