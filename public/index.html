@@ -44,7 +44,8 @@
     {
         questIndex++;
         var newDiv = $("#newques");
-        var div = "<br/><div id='new" + questIndex + "'><a style='cursor: pointer;float:right;' onclick='removeButton(" + questIndex + ")' id='remove[" + questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
+        var div = "<div id='new" + questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a style='cursor: pointer;float:right;' onclick='removeButton(" + questIndex + ")' id='remove[" + questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
+        
         newDiv.append(div);
     }
     function removeButton(Id)
@@ -52,6 +53,59 @@
        questIndex--;
        $( "#new"+Id ).remove();
     }
+$(document).ready(function () {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+        var target = $(e.target).attr("href") // activated tab
+        if(target == '#Astext')
+        {   
+            var root = $("#importText");
+            var e1 = '';
+            
+            for (var i= 0; i <= questIndex; i++) {
+               
+                var qname = $("#qname"+i).val();
+                var qdescr = $("#qdescr"+i).val();
+                e1 += "<p contenteditable='true' id='quesid"+i+"'>"+qname+"</p>";
+                if(qdescr)
+                {
+                    e1 += "<p contenteditable='true' id='descid"+i+"'> "+qdescr+"</p>";
+                    
+                }
+                for(var j = 1; j <= 5;j++){  
+
+                    var ans = $("#Answer"+j+"-"+i).val();
+                    if(ans)
+                    {
+                        e1 +=  "<p contenteditable='true' id='answer"+j+"-"+i+"'>"+ans+"</p>";
+                    }
+                }
+            }
+            $("#importText").html(e1); 
+        }
+        if(target == '#AsView')
+        {
+            for (var k= 0; k<= questIndex; k++) {
+                
+                var qtext   = $("#quesid"+k).text();
+                var destext = $("#descid"+k).text();
+                $("#qname"+k).val('');
+                $("#qdescr"+k).val('');
+                $("#qname"+k).val(qtext);
+                $("#qdescr"+k).val(destext);
+
+                for( var t=0;t<=5;t++)
+                {
+                    var anstext   = $("#answer"+t+"-"+k).text();
+                    if(anstext)
+                    {
+                        $("#Answer"+t+"-"+k).val(anstext);
+                    }
+                }
+            }
+        }
+    });
+ });
 </script>
 <script src="https://trcanvasdata.blob.core.windows.net/code2/plugin.js"></script>
 <html lang="en">
@@ -82,57 +136,19 @@
                     <img src="https://trcanvasdata.blob.core.windows.net/code2/loading.gif">
             </div>
 
-        <div class="row">
+        <div class="row" id="maincontent">
             <div class="col-sm-12">
                 <h2>Add a new question:</h2>
                     <ul class="nav nav-tabs">
                         <li class="active">
-                            <a href="#oneQuest" data-toggle="tab">View</a>
+                            <a href="#AsView" data-toggle="tab">View</a>
                         </li>
                         <li>
-                            <a href="#multipleQuest" data-toggle="tab">As Text</a>
+                            <a href="#Astext" data-toggle="tab">As Text</a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane active" id="oneQuest">
-                        <br/>
-                        <div class="row panel panel-default" >
-                            <div class="col-sm-12">
-                                <br/>
-                                <p><input id="qname" placeholder="(slug)"> (required, Short name, made of just A-Z,0-9,_ )
-                                </p>
-                                <p>
-                                   <input id="qdescr" placeholder="(description)" size=80> (optional, Human readable description)</p>
-                                    <p>Possible Answers:</p>
-                                    <ul>
-                                        <li>
-                                            <input id="Answer1" placeholder="(answer)" size=40>
-                                        </li>
-                                        <br/>
-                                        <li>
-                                            <input id="Answer2" placeholder="(answer)" size=40>
-                                        </li>
-                                        <br/>
-                                        <li>
-                                            <input id="Answer3" placeholder="(answer)" size=40>
-                                        </li>
-                                        <br/>
-                                        <li>
-                                            <input id="Answer4" placeholder="(answer)" size=40>
-                                        </li>
-                                        <br/>
-                                        <li>
-                                            <input id="Answer5" placeholder="(answer)" size=40>
-                                        </li>
-                                        <br/>
-                                    </ul>
-                                    <button onclick="_plugin.onAddQuestion()" class="btn btn-primary">Add Question!</button>
-                                     <br/>
-                                    <br/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="multipleQuest">
+                        <div class="tab-pane active" id="AsView">
                             <br/>
                             <div class="row panel panel-default">
                                 <form name="qdata" id="qdata" onsubmit="return false" method="post" >
@@ -141,29 +157,29 @@
                                             <p>
                                                 <input id="qname0" placeholder="(slug)" value=""> (required, Short name, made of just A-Z,0-9,_ ) </p>
                                             <p>
-                                                <input id="qdescr0" placeholder="(description)" size=80> (optional, Human readable description)</p>
+                                                <input id="qdescr0" placeholder="(description)" value="" size=80> (optional, Human readable description)</p>
                                             <p>Possible Answers:</p>
                                             <ul>
                                                 <li>
-                                                    <input id="Answer1-0" placeholder="(answer)" size=40>
+                                                    <input id="Answer1-0" placeholder="(answer)" size=40 value="">
                                                 </li>
                                                 <br/>
                                                 <li>
-                                                    <input id="Answer2-0" placeholder="(answer)" size=40>
+                                                    <input id="Answer2-0" placeholder="(answer)" size=40 value="">
                                                 </li>
                                                 <br/>
                                                 <li>
-                                                    <input id="Answer3-0" placeholder="(answer)" size=40>
+                                                    <input id="Answer3-0" placeholder="(answer)" size=40 value="">
 
                                                 </li>
                                                 <br/>
                                                 <li>
-                                                    <input id="Answer4-0" placeholder="(answer)" size=40>
+                                                    <input id="Answer4-0" placeholder="(answer)" size=40 value="">
 
                                                 </li>
                                                 <br/>
                                                 <li>
-                                                    <input id="Answer5-0" placeholder="(answer)" size=40>
+                                                    <input id="Answer5-0" placeholder="(answer)" size=40 value="">
 
                                                 </li>
                                             </ul>
@@ -180,6 +196,14 @@
                                 </form>
                             </div>
                           <br/>
+                        </div>
+                        <div class="tab-pane" id="Astext">
+                        <br/>
+                        <div class="row" >
+                            <div class="col-sm-12" id="importText">
+                                
+                            </div>
+                        </div>
                         </div>
                         <h3> </h3>
                    </div>

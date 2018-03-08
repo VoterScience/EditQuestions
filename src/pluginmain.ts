@@ -63,6 +63,7 @@ export class MyPlugin {
 
         $("#polling").show();
         $("#contents").hide();
+        $("#maincontent").hide();
 
         // Check if we're ready?
         var admin = new trcSheet.SheetAdminClient(this._sheet);
@@ -70,6 +71,8 @@ export class MyPlugin {
             // We're ready!
             $("#polling").hide();
             $("#contents").show();
+            $("#maincontent").show();
+            
 
             return this._sheet.getInfoAsync().then(info => {
                 this._info = info;
@@ -92,7 +95,7 @@ export class MyPlugin {
                 var name = c.Name; // Api name
                 var desc = c.Description; // maybe missing
                 var answers = c.PossibleValues; // Possible values
-                var newLine = "\r\n";
+                var newLine = "\n";
                 if(name!= 'Party' && name!='Cellphone' && name!='Comment' && name!='Comments')
                 {
                     var l = name.length; // length of the original string
@@ -237,6 +240,7 @@ export class MyPlugin {
         var admin = new trcSheet.SheetAdminClient(this._sheet);
         admin.postOpAddQuestionAsync(questions).then(
             () => {
+                
                 return this.InitAsync();
             }
         );
