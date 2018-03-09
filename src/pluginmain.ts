@@ -276,4 +276,57 @@ export class MyPlugin {
         }
         this.AddQuestionInSheet(questions);
     }
+    //for bulk import
+    public onTextImport(event:string,questIndex:number)
+    {
+        var target = event;
+        // activated tab
+        if(target == '#Astext')
+        {   
+            var root = $("#importText");
+            var e1 = '';
+            
+            for (var i= 0; i <= questIndex; i++) {
+               
+                var qname = $("#qname"+i).val();
+                var qdescr = $("#qdescr"+i).val();
+                e1 += "<p contenteditable='true' id='quesid"+i+"'>"+qname+"</p>";
+                if(qdescr)
+                {
+                    e1 += "<p contenteditable='true' id='descid"+i+"'> "+qdescr+"</p>";
+                    
+                }
+                for(var j = 1; j <= 5;j++){  
+
+                    var ans = $("#Answer"+j+"-"+i).val();
+                    if(ans)
+                    {
+                        e1 +=  "<p contenteditable='true' id='answer"+j+"-"+i+"'>"+ans+"</p>";
+                    }
+                }
+            }
+            $("#importText").html(e1); 
+        }
+        if(target == '#AsView')
+        {
+            for (var k= 0; k<= questIndex; k++) {
+                
+                var qtext   = $("#quesid"+k).text();
+                var destext = $("#descid"+k).text();
+                $("#qname"+k).val('');
+                $("#qdescr"+k).val('');
+                $("#qname"+k).val(qtext);
+                $("#qdescr"+k).val(destext);
+
+                for( var t=0;t<=5;t++)
+                {
+                    var anstext   = $("#answer"+t+"-"+k).text();
+                    if(anstext)
+                    {
+                        $("#Answer"+t+"-"+k).val(anstext);
+                    }
+                }
+            }
+        }
+    }
 }

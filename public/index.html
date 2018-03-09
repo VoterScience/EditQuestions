@@ -53,59 +53,6 @@
        questIndex--;
        $( "#new"+Id ).remove();
     }
-$(document).ready(function () {
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-
-        var target = $(e.target).attr("href") // activated tab
-        if(target == '#Astext')
-        {   
-            var root = $("#importText");
-            var e1 = '';
-            
-            for (var i= 0; i <= questIndex; i++) {
-               
-                var qname = $("#qname"+i).val();
-                var qdescr = $("#qdescr"+i).val();
-                e1 += "<p contenteditable='true' id='quesid"+i+"'>"+qname+"</p>";
-                if(qdescr)
-                {
-                    e1 += "<p contenteditable='true' id='descid"+i+"'> "+qdescr+"</p>";
-                    
-                }
-                for(var j = 1; j <= 5;j++){  
-
-                    var ans = $("#Answer"+j+"-"+i).val();
-                    if(ans)
-                    {
-                        e1 +=  "<p contenteditable='true' id='answer"+j+"-"+i+"'>"+ans+"</p>";
-                    }
-                }
-            }
-            $("#importText").html(e1); 
-        }
-        if(target == '#AsView')
-        {
-            for (var k= 0; k<= questIndex; k++) {
-                
-                var qtext   = $("#quesid"+k).text();
-                var destext = $("#descid"+k).text();
-                $("#qname"+k).val('');
-                $("#qdescr"+k).val('');
-                $("#qname"+k).val(qtext);
-                $("#qdescr"+k).val(destext);
-
-                for( var t=0;t<=5;t++)
-                {
-                    var anstext   = $("#answer"+t+"-"+k).text();
-                    if(anstext)
-                    {
-                        $("#Answer"+t+"-"+k).val(anstext);
-                    }
-                }
-            }
-        }
-    });
- });
 </script>
 <script src="https://trcanvasdata.blob.core.windows.net/code2/plugin.js"></script>
 <html lang="en">
@@ -141,10 +88,10 @@ $(document).ready(function () {
                 <h2>Add a new question:</h2>
                     <ul class="nav nav-tabs">
                         <li class="active">
-                            <a href="#AsView" data-toggle="tab">View</a>
+                            <a href="#AsView" onclick="_plugin.onTextImport('#AsView',questIndex)" data-toggle="tab">View</a>
                         </li>
                         <li>
-                            <a href="#Astext" data-toggle="tab">As Text</a>
+                            <a href="#Astext" onclick="_plugin.onTextImport('#Astext',questIndex)" data-toggle="tab">As Text</a>
                         </li>
                     </ul>
                     <div class="tab-content">
