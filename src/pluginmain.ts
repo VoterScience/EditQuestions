@@ -27,6 +27,7 @@ export class MyPlugin {
     private _sheet: trcSheet.SheetClient;
     private _pluginClient: plugin.PluginClient;
     private _info: trcSheet.ISheetInfoResult;
+    private questIndex:number;
 
     public static BrowserEntryAsync(
         auth: plugin.IStart,
@@ -54,6 +55,7 @@ export class MyPlugin {
     // Expose constructor directly for tests. They can pass in mock versions.
     public constructor(p: plugin.PluginClient) {
         this._sheet = new trcSheet.SheetClient(p.HttpClient, p.SheetId);
+        this.questIndex = 0;
     }
 
     // Make initial network calls to setup the plugin.
@@ -72,7 +74,7 @@ export class MyPlugin {
             $("#polling").hide();
             $("#contents").show();
             $("#maincontent").show();
-            
+
 
             return this._sheet.getInfoAsync().then(info => {
                 this._info = info;
@@ -240,17 +242,17 @@ export class MyPlugin {
         var admin = new trcSheet.SheetAdminClient(this._sheet);
         admin.postOpAddQuestionAsync(questions).then(
             () => {
-                
+
                 return this.InitAsync();
             }
         );
     }
 
-    public onAddMultipleQuestion(questIndex:number): void {
+    public onAddMultipleQuestion(): void {
 
         let questions = new Array();
-        for (let i: number = 0; i <= questIndex; i++) {
-
+        for (let i: number = 0; i <= this.questIndex; i++) {
+            if ($('div#new' + i).length == 1) {
                 var answers: string[] = [];
                 var qname = $("#qname"+i).val();
                 var qdescr = $("#qdescr"+i).val();
@@ -273,60 +275,92 @@ export class MyPlugin {
                 } else {
                     return;
                 }
+            }
         }
         this.AddQuestionInSheet(questions);
     }
-    //for bulk import
-    public onTextImport(event:string,questIndex:number)
-    {
-        var target = event;
-        // activated tab
-        if(target == '#Astext')
-        {   
-            var root = $("#importText");
-            var e1 = '';
-            
-            for (var i= 0; i <= questIndex; i++) {
-               
+
+    public onAddmoreQuest() : void {
+        this.questIndex++;
+        var firstDiv = $("#new0");
+        var newDiv = "<div id='new" + this.questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a style='cursor: pointer;float:right;' onclick='_plugin.onRemoveButton(" + this.questIndex + ")' id='remove[" + this.questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + this.questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + this.questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + this.questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
+
+        firstDiv.append(newDiv);
+    }
+
+    public onRemoveButton(Id : string) : void {
+
+       //this.questIndex--;
+       $( "#new"+Id ).remove();
+    }
+
+    public onTextImport() : void {
+        var e1 = "";
+        for (var i = 0; i <= this.questIndex; i++) {
+
+            if ($('div#new' + i).length == 1) {
                 var qname = $("#qname"+i).val();
                 var qdescr = $("#qdescr"+i).val();
-                e1 += "<p contenteditable='true' id='quesid"+i+"'>"+qname+"</p>";
+                e1 += "<div>"+qname;
                 if(qdescr)
                 {
-                    e1 += "<p contenteditable='true' id='descid"+i+"'> "+qdescr+"</p>";
-                    
+                    e1 += "|"+qdescr;
                 }
-                for(var j = 1; j <= 5;j++){  
+
+                e1 += "?</div>";
+                for(var j = 1; j <= 5;j++){
 
                     var ans = $("#Answer"+j+"-"+i).val();
                     if(ans)
                     {
-                        e1 +=  "<p contenteditable='true' id='answer"+j+"-"+i+"'>"+ans+"</p>";
+                        e1 +=  "<div>"+ans+"</div>";
                     }
                 }
+                e1 += "<br>";
             }
-            $("#importText").html(e1); 
         }
-        if(target == '#AsView')
-        {
-            for (var k= 0; k<= questIndex; k++) {
-                
-                var qtext   = $("#quesid"+k).text();
-                var destext = $("#descid"+k).text();
-                $("#qname"+k).val('');
-                $("#qdescr"+k).val('');
-                $("#qname"+k).val(qtext);
-                $("#qdescr"+k).val(destext);
+        $("#importText").html(e1);
+    }
 
-                for( var t=0;t<=5;t++)
-                {
-                    var anstext   = $("#answer"+t+"-"+k).text();
-                    if(anstext)
-                    {
-                        $("#Answer"+t+"-"+k).val(anstext);
+    public onViewImport() : void {
+
+        var i = 0;
+        var j = 1;
+        var k = 0;
+        var index = this.questIndex;
+
+
+        $("#importText div").each(function() {
+            var item = $(this).html();
+
+            if (item == "<br>") {
+                return ;
+            }
+
+            if (item.indexOf("?") != -1) {
+
+                if (k != 0) {
+                    i++;
+                    j = 1;
+
+                    if (k > index) {
+                        $('#addQuestion').click();
                     }
                 }
+                item = item.replace("?", "");
+                var ques = item.split("|");
+
+                $('#qname'+i).val(ques[0]);
+                $('#qdescr'+i).val(ques[1]);
+                k++;
+            } else {
+                $('#Answer' + j + '-' +i).val(item);
+                j++;
             }
-        }
+        });
+    }
+
+    public onBulkImport(): void {
+        $('#as-view').click();
     }
 }

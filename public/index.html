@@ -39,20 +39,8 @@
             showError(error);
         });
     }
-   var questIndex = 0;
-   function onAddmoreQuest()
-    {
-        questIndex++;
-        var newDiv = $("#newques");
-        var div = "<div id='new" + questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a style='cursor: pointer;float:right;' onclick='removeButton(" + questIndex + ")' id='remove[" + questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
-        
-        newDiv.append(div);
-    }
-    function removeButton(Id)
-    {
-       questIndex--;
-       $( "#new"+Id ).remove();
-    }
+
+
 </script>
 <script src="https://trcanvasdata.blob.core.windows.net/code2/plugin.js"></script>
 <html lang="en">
@@ -88,18 +76,18 @@
                 <h2>Add a new question:</h2>
                     <ul class="nav nav-tabs">
                         <li class="active">
-                            <a href="#AsView" onclick="_plugin.onTextImport('#AsView',questIndex)" data-toggle="tab">View</a>
+                            <a id="as-view" href="#AsView" onclick="_plugin.onViewImport()" data-toggle="tab">View</a>
                         </li>
                         <li>
-                            <a href="#Astext" onclick="_plugin.onTextImport('#Astext',questIndex)" data-toggle="tab">As Text</a>
+                            <a id="as-text" href="#Astext" onclick="_plugin.onTextImport()" data-toggle="tab">As Text</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="AsView">
                             <br/>
                             <div class="row panel panel-default">
-                                <form name="qdata" id="qdata" onsubmit="return false" method="post" >
-                                    <div id="newques" class="col-sm-12">
+                                <form name="qdata" id="survey-form" onsubmit="return false" method="post" >
+                                    <div id="new0" class="col-sm-12">
                                         <br/>
                                             <p>
                                                 <input id="qname0" placeholder="(slug)" value=""> (required, Short name, made of just A-Z,0-9,_ ) </p>
@@ -133,10 +121,10 @@
                                     </div>
                                     <br/>
                                     <div  class="col-sm-12">
-                                         <a onclick="onAddmoreQuest()" style="cursor: pointer;" title="Add More Questions"><span class="glyphicon glyphicon-plus"></span></a>
+                                         <a id="addQuestion" onclick="_plugin.onAddmoreQuest()" style="cursor: pointer;" title="Add More Questions"><span class="glyphicon glyphicon-plus"></span></a>
                                          <br/>
                                          <br/>
-                                        <button onclick="_plugin.onAddMultipleQuestion(questIndex)"  class="btn btn-primary"> Apply </button>
+                                        <button onclick="_plugin.onAddMultipleQuestion()"  class="btn btn-primary"> Apply </button>
                                         <br/>
                                         <br/>
                                    </div>
@@ -147,9 +135,10 @@
                         <div class="tab-pane" id="Astext">
                         <br/>
                         <div class="row" >
-                            <div class="col-sm-12" id="importText">
-                                
+                            <div class="col-sm-12" id="importText" contenteditable='true'>
+
                             </div>
+                            <button id="bulk-import" onclick="_plugin.onBulkImport()" class="btn btn-primary">Import </button>
                         </div>
                         </div>
                         <h3> </h3>
