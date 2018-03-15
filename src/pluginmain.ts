@@ -97,7 +97,7 @@ export class MyPlugin {
                 var name = c.Name; // Api name
                 var desc = c.Description; // maybe missing
                 var answers = c.PossibleValues; // Possible values
-                var newLine = "\n";
+                var newLine = "<br>";
                 if(name!= 'Party' && name!='Cellphone' && name!='Comment' && name!='Comments')
                 {
                     var l = name.length; // length of the original string
@@ -108,24 +108,18 @@ export class MyPlugin {
                     else { // otherwise do nothing
                     name = name;
                     }
-                    viewText += name;
+                    viewText += "<div>" + name;
                     if (desc) {
                         viewText += '|'+desc;
                     }
-
+                    viewText += "?</div>";
                     var ans = '' ;
                     if (answers) {
 
-                       viewText += newLine;
                        for (let k : number = 0; k< 4 ;k++) {
 
                             var answer: string = answers[k];
-                            ans += $.trim(answer) ;
-
-                            if(answer)
-                            {
-                                ans += newLine;
-                            }
+                            ans += "<div>" + $.trim(answer) + "</div>";
                         }
                         viewText += ans;
                         viewText += newLine;
@@ -306,8 +300,11 @@ export class MyPlugin {
                 {
                     e1 += "|"+qdescr;
                 }
+                if (qname || qdescr) {
+                    e1 += "?";
+                }
 
-                e1 += "?</div>";
+                e1 += "</div>";
                 for(var j = 1; j <= 5;j++){
 
                     var ans = $("#Answer"+j+"-"+i).val();
@@ -328,6 +325,8 @@ export class MyPlugin {
         var j = 1;
         var k = 0;
         var index = this.questIndex;
+        //reset form
+        $('form#survey-form')[0].reset();
 
 
         $("#importText div").each(function() {
