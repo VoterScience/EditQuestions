@@ -100,14 +100,6 @@ export class MyPlugin {
                 var newLine = "<br>";
                 if(name!= 'Party' && name!='Cellphone' && name!='Comment' && name!='Comments')
                 {
-                    var l = name.length; // length of the original string
-                    var lastChar = name.substring(l-1, l); // get the last char of the original string
-                    if (lastChar == "?") { // if the last char is found, remove the last char
-                        name = name.substring(0, l-1);
-                    }
-                    else { // otherwise do nothing
-                    name = name;
-                    }
                     viewText += "<div>" + name;
                     if (desc) {
                         viewText += '|'+desc;
