@@ -85,7 +85,7 @@ export class MyPlugin {
 
     // Display sheet info on HTML page
     public updateInfo(info: trcSheet.ISheetInfoResult): void {
-
+        $("#existing").html("");
         var root = $("#existing");
         var readOnly = $("#viewText");
         var readOnlyData = "";
@@ -127,7 +127,7 @@ export class MyPlugin {
                         ans += $.trim(answer) + '\n';
                     }
                     viewText += ans + '\n';
-                     eBody.append(e2);
+                    eBody.append(e2);
 
                 }
 
