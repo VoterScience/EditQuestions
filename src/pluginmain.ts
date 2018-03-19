@@ -262,22 +262,21 @@ export class MyPlugin {
     public onAddmoreQuest() : void {
         this.questIndex++;
         var firstDiv = $("#new0");
-        var newDiv = "<div id='new" + this.questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a style='cursor: pointer;float:right;' onclick='_plugin.onRemoveButton(" + this.questIndex + ")' id='remove[" + this.questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + this.questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + this.questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + this.questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
+        var newDiv = "<div class='more-question' id='new" + this.questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a style='cursor: pointer;float:right;' onclick='_plugin.onRemoveButton(" + this.questIndex + ")' id='remove[" + this.questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + this.questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + this.questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + this.questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
 
         firstDiv.append(newDiv);
     }
 
     public onRemoveButton(Id : string) : void {
-
-       //this.questIndex--;
        $( "#new"+Id ).remove();
     }
 
     public onTextImport() : void {
         var e1 = "";
+        $("#importText").val("");
         for (var i = 0; i <= this.questIndex; i++) {
 
-            if ($('div#new' + i).length == 1) {
+            if ($('div#new' + i).length != 0) {
                 var qname = $("#qname"+i).val();
                 var qdescr = $("#qdescr"+i).val();
                 e1 += qname;
@@ -301,7 +300,7 @@ export class MyPlugin {
                 e1 += '\n';
             }
         }
-        $("#importText").html(e1);
+        $("#importText").val(e1);
     }
 
     public onViewImport() : void {
@@ -309,7 +308,10 @@ export class MyPlugin {
         var i = 0;
         var j = 1;
         var k = 0;
-        var quesIndex = this.questIndex;
+        var l = 0;
+
+        this.questIndex = 0;
+        $('.more-question').remove();
 
         //reset form
         $('form#survey-form')[0].reset();
@@ -317,25 +319,25 @@ export class MyPlugin {
         var arrayOfData: any = $('#importText').val().split('\n');
 
         $.each(arrayOfData, function(index:number, item:string) {
-
             if (item == "") {
-                return ;
-            }
-
-            if (item.indexOf("?") != -1) {
-
                 if (k != 0) {
                     i++;
                     j = 1;
-
-                    if (k > quesIndex) {
-                        $('#addQuestion').click();
-                    }
+                    l = 0;
                 }
-                console.log(item);
-                item = item.replace("?", "");
+                return ;
+            }
 
-                console.log(item);
+            if (l == 0) {
+
+                if (k > 0) {
+                    $('#addQuestion').click();
+                }
+
+                if (item.indexOf("?") != -1) {
+                    item = item.replace("?", "");
+                }
+
                 var ques = item.split("|");
 
                 $('#qname'+i).val(ques[0]);
@@ -345,10 +347,12 @@ export class MyPlugin {
                 $('#Answer' + j + '-' +i).val(item);
                 j++;
             }
+            l++;
         });
     }
 
     public onBulkImport(): void {
         $('#as-view').click();
     }
+
 }
