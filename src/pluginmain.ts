@@ -88,6 +88,7 @@ export class MyPlugin {
 
         var root = $("#existing");
         var readOnly = $("#viewText");
+        var readOnlyData = "";
         // Add existing questions to the page.
         for (var i in info.Columns) {
             var c = info.Columns[i];
@@ -97,41 +98,24 @@ export class MyPlugin {
                 var name = c.Name; // Api name
                 var desc = c.Description; // maybe missing
                 var answers = c.PossibleValues; // Possible values
-                var newLine = "<br>";
-                if(name!= 'Party' && name!='Cellphone' && name!='Comment' && name!='Comments')
-                {
-                    viewText += "<div>" + name;
-                    if (desc) {
-                        viewText += '|'+desc;
-                    }
-                    viewText += "?</div>";
-                    var ans = '' ;
-                    if (answers) {
 
-                       for (let k : number = 0; k< 4 ;k++) {
-
-                            var answer: string = answers[k];
-                            ans += "<div>" + $.trim(answer) + "</div>";
-                        }
-                        viewText += ans;
-                        viewText += newLine;
-                        readOnly.append(viewText);
-                    }
-                }
                 if (answers) {
 
                     var text = "[" + name + "]";
+                    viewText += name;
                     if (desc) {
                         text += " " + desc;
+                        viewText += '|'+desc;
                     }
-                    var e1 = $("<div class='panel panel-default'>")
+                    viewText += "?\n";
+                    var e1 = $("<div class='panel panel-default'>");
                     var eHeading = $("<div class='panel-heading'>").text(text);
                     e1.append(eHeading);
 
                     var eBody = $("<div class='panel-body'>");
 
                     // var tx3 = $("<p>" + text + "</p>");
-
+                    var ans = '' ;
                     var e2 = $("<ul>");
                     for (var j in answers) {
 
@@ -139,7 +123,10 @@ export class MyPlugin {
 
                         var elementAnswer = $("<li>").text(answer);
                         e2.append(elementAnswer);
+
+                        ans += $.trim(answer) + '\n';
                     }
+                    viewText += ans + '\n';
                      eBody.append(e2);
 
                 }
@@ -148,7 +135,13 @@ export class MyPlugin {
                     e1.append(eBody);
                     root.append(e1);
                 }
+                if (viewText && (name!= 'Party' && name!='Cellphone' && name!='Comment' && name!='Comments')) {
+                    readOnlyData += viewText;
+                }
             }
+        }
+        if (readOnlyData) {
+            readOnly.html(readOnlyData);
         }
 
     }
@@ -287,7 +280,7 @@ export class MyPlugin {
             if ($('div#new' + i).length == 1) {
                 var qname = $("#qname"+i).val();
                 var qdescr = $("#qdescr"+i).val();
-                e1 += "<div>"+qname;
+                e1 += qname;
                 if(qdescr)
                 {
                     e1 += "|"+qdescr;
@@ -296,16 +289,16 @@ export class MyPlugin {
                     e1 += "?";
                 }
 
-                e1 += "</div>";
+                e1 += '\n';
                 for(var j = 1; j <= 5;j++){
 
                     var ans = $("#Answer"+j+"-"+i).val();
                     if(ans)
                     {
-                        e1 +=  "<div>"+ans+"</div>";
+                        e1 +=  ans + '\n';
                     }
                 }
-                e1 += "<br>";
+                e1 += '\n';
             }
         }
         $("#importText").html(e1);
@@ -316,15 +309,16 @@ export class MyPlugin {
         var i = 0;
         var j = 1;
         var k = 0;
-        var index = this.questIndex;
+        var quesIndex = this.questIndex;
+
         //reset form
         $('form#survey-form')[0].reset();
 
+        var arrayOfData: any = $('#importText').val().split('\n');
 
-        $("#importText div").each(function() {
-            var item = $(this).html();
+        $.each(arrayOfData, function(index:number, item:string) {
 
-            if (item == "<br>") {
+            if (item == "") {
                 return ;
             }
 
@@ -334,11 +328,14 @@ export class MyPlugin {
                     i++;
                     j = 1;
 
-                    if (k > index) {
+                    if (k > quesIndex) {
                         $('#addQuestion').click();
                     }
                 }
+                console.log(item);
                 item = item.replace("?", "");
+
+                console.log(item);
                 var ques = item.split("|");
 
                 $('#qname'+i).val(ques[0]);

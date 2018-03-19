@@ -133,16 +133,15 @@
                           <br/>
                         </div>
                         <div class="tab-pane" id="Astext">
-                        <br/>
-                        <div class="row panel panel-default">
-                            <div class="col-sm-12" id="importText" contenteditable='true'>
 
+                            <div class="row panel panel-default">
+                                <div class="form-group" style="padding:12px;">
+                                    <textarea data-autoresize id="importText" rows=10 class="form-control animated" placeholder="Upload questions"></textarea>
+
+                                    <button id="bulk-import" type="button" onclick="_plugin.onBulkImport()" class="btn btn-primary">Import </button>
+                            </div>
                             </div>
                         </div>
-                            <button id="bulk-import" onclick="_plugin.onBulkImport()" class="btn btn-primary">Import </button>
-
-                        </div>
-                        <h3> </h3>
                    </div>
                    <h2>Existing questions:</h2>
                     <ul class="nav nav-tabs">
