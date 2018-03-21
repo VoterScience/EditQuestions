@@ -110,6 +110,7 @@ export class MyPlugin {
                     viewText += "?\n";
                     var e1 = $("<div class='panel panel-default'>");
                     var eHeading = $("<div class='panel-heading'>").text(text);
+                    eHeading.append("<a class='btn pull-right' onclick='_plugin.onQuestionDelete()' id="+name+" class='btn' ><i class='glyphicon glyphicon-remove'></i><a/>");
                     e1.append(eHeading);
 
                     var eBody = $("<div class='panel-body'>");
@@ -335,7 +336,7 @@ export class MyPlugin {
                 }
 
                 if (item.indexOf("?") != -1) {
-                    item = item.replace("?", "");
+                    item = item.replace(/\?/g, "");
                 }
 
                 var ques = item.split("|");
@@ -355,4 +356,7 @@ export class MyPlugin {
         $('#as-view').click();
     }
 
+    private onQuestionDelete() {
+        alert('Delete Question');
+    }
 }
