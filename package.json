@@ -9,7 +9,7 @@
   "dependencies": {
     "trc-httpshim": "^1.0.0",
     "trc-core" : "^1.0.0",  
-    "trc-sheet" : "^1.0.0",
+    "trc-sheet" : "^1.3.0",
     "trc-web" : "^1.0.0"
   },
   "devDependencies": {
