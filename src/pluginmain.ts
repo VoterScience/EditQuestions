@@ -27,7 +27,7 @@ export class MyPlugin {
     private _sheet: trcSheet.SheetClient;
     private _pluginClient: plugin.PluginClient;
     private _info: trcSheet.ISheetInfoResult;
-    private questIndex:number;
+    private questIndex: number;
 
     public static BrowserEntryAsync(
         auth: plugin.IStart,
@@ -99,24 +99,24 @@ export class MyPlugin {
                 var desc = c.Description; // maybe missing
                 var answers = c.PossibleValues; // Possible values
 
-                if (answers) {
+                if (answers && answers.length > 0) {
 
                     var text = "[" + name + "]";
                     viewText += name;
                     if (desc) {
                         text += " " + desc;
-                        viewText += '|'+desc;
+                        viewText += '|' + desc;
                     }
                     viewText += "?\n";
                     var e1 = $("<div class='panel panel-default'>");
                     var eHeading = $("<div class='panel-heading'>").text(text);
-                    eHeading.append("<a class='btn pull-right' onclick='_plugin.onQuestionDelete()' id="+name+" class='btn' ><i class='glyphicon glyphicon-remove'></i><a/>");
+                    eHeading.append("<a class='btn pull-right' onclick='_plugin.onQuestionDelete()' id=" + name + " class='btn' ><i class='glyphicon glyphicon-remove'></i><a/>");
                     e1.append(eHeading);
 
                     var eBody = $("<div class='panel-body'>");
 
                     // var tx3 = $("<p>" + text + "</p>");
-                    var ans = '' ;
+                    var ans = '';
                     var e2 = $("<ul>");
                     for (var j in answers) {
 
@@ -136,7 +136,7 @@ export class MyPlugin {
                     e1.append(eBody);
                     root.append(e1);
                 }
-                if (viewText && (name!= 'Party' && name!='Cellphone' && name!='Comment' && name!='Comments')) {
+                if (viewText && (name != 'Party' && name != 'Cellphone' && name != 'Comment' && name != 'Comments')) {
                     readOnlyData += viewText;
                 }
             }
@@ -217,7 +217,7 @@ export class MyPlugin {
         }
     }
 
-    private AddQuestionInSheet(questions : any) {
+    private AddQuestionInSheet(questions: any) {
         // Actually add the question and do the refresh
         var admin = new trcSheet.SheetAdminClient(this._sheet);
         admin.postOpAddQuestionAsync(questions).then(
@@ -234,8 +234,8 @@ export class MyPlugin {
         for (let i: number = 0; i <= this.questIndex; i++) {
             if ($('div#new' + i).length == 1) {
                 var answers: string[] = [];
-                var qname = $("#qname"+i).val();
-                var qdescr = $("#qdescr"+i).val();
+                var qname = $("#qname" + i).val();
+                var qdescr = $("#qdescr" + i).val();
 
                 if (!qname) {
                     alert('Error: Question shortname is missing');
@@ -243,11 +243,11 @@ export class MyPlugin {
                 }
 
                 var answers: string[] = [];
-                MyPlugin.AddAnswer(answers, "Answer1-"+i);
-                MyPlugin.AddAnswer(answers, "Answer2-"+i);
-                MyPlugin.AddAnswer(answers, "Answer3-"+i);
-                MyPlugin.AddAnswer(answers, "Answer4-"+i);
-                MyPlugin.AddAnswer(answers, "Answer5-"+i);
+                MyPlugin.AddAnswer(answers, "Answer1-" + i);
+                MyPlugin.AddAnswer(answers, "Answer2-" + i);
+                MyPlugin.AddAnswer(answers, "Answer3-" + i);
+                MyPlugin.AddAnswer(answers, "Answer4-" + i);
+                MyPlugin.AddAnswer(answers, "Answer5-" + i);
 
                 var add = this.validateQuestion(qname, qdescr, answers);
                 if (add) {
@@ -260,7 +260,7 @@ export class MyPlugin {
         this.AddQuestionInSheet(questions);
     }
 
-    public onAddmoreQuest() : void {
+    public onAddmoreQuest(): void {
         this.questIndex++;
         var firstDiv = $("#new0");
         var newDiv = "<div class='more-question' id='new" + this.questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a style='cursor: pointer;float:right;' onclick='_plugin.onRemoveButton(" + this.questIndex + ")' id='remove[" + this.questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + this.questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + this.questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + this.questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
@@ -268,34 +268,32 @@ export class MyPlugin {
         firstDiv.append(newDiv);
     }
 
-    public onRemoveButton(Id : string) : void {
-       $( "#new"+Id ).remove();
+    public onRemoveButton(Id: string): void {
+        $("#new" + Id).remove();
     }
 
-    public onTextImport() : void {
+    public onTextImport(): void {
         var e1 = "";
         $("#importText").val("");
         for (var i = 0; i <= this.questIndex; i++) {
 
             if ($('div#new' + i).length != 0) {
-                var qname = $("#qname"+i).val();
-                var qdescr = $("#qdescr"+i).val();
+                var qname = $("#qname" + i).val();
+                var qdescr = $("#qdescr" + i).val();
                 e1 += qname;
-                if(qdescr)
-                {
-                    e1 += "|"+qdescr;
+                if (qdescr) {
+                    e1 += "|" + qdescr;
                 }
                 if (qname || qdescr) {
                     e1 += "?";
                 }
 
                 e1 += '\n';
-                for(var j = 1; j <= 5;j++){
+                for (var j = 1; j <= 5; j++) {
 
-                    var ans = $("#Answer"+j+"-"+i).val();
-                    if(ans)
-                    {
-                        e1 +=  ans + '\n';
+                    var ans = $("#Answer" + j + "-" + i).val();
+                    if (ans) {
+                        e1 += ans + '\n';
                     }
                 }
                 e1 += '\n';
@@ -304,7 +302,7 @@ export class MyPlugin {
         $("#importText").val(e1);
     }
 
-    public onViewImport() : void {
+    public onViewImport(): void {
 
         var i = 0;
         var j = 1;
@@ -319,14 +317,14 @@ export class MyPlugin {
 
         var arrayOfData: any = $('#importText').val().split('\n');
 
-        $.each(arrayOfData, function(index:number, item:string) {
+        $.each(arrayOfData, function (index: number, item: string) {
             if (item == "") {
                 if (k != 0) {
                     i++;
                     j = 1;
                     l = 0;
                 }
-                return ;
+                return;
             }
 
             if (l == 0) {
@@ -341,11 +339,11 @@ export class MyPlugin {
 
                 var ques = item.split("|");
 
-                $('#qname'+i).val(ques[0]);
-                $('#qdescr'+i).val(ques[1]);
+                $('#qname' + i).val(ques[0]);
+                $('#qdescr' + i).val(ques[1]);
                 k++;
             } else {
-                $('#Answer' + j + '-' +i).val(item);
+                $('#Answer' + j + '-' + i).val(item);
                 j++;
             }
             l++;

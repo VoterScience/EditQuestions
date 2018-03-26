@@ -1,10 +1,10 @@
 ﻿{
     // ID must be unique on the gallery
-    "Id": "PluginTemplate",
-    "Name": "An empty plugin",
+    "Id": "EditQuestions",
+    "Name": "Edit survey question",
     "Author" :  "Voter-Science",
-    "Website" :  "https://github.com/Voter-Science/TRC-API-Samples",
-    "Description": "An empty plugin that just gets the initial login and shows basic sheet properties.",        
+    "Website" :  "https://github.com/VoterScience/EditQuestions",
+    "Description": "Edit survey questions.",        
     "Version": "1.0.0", // User SemVer
-    "Tags": [ "demo"  ]
+    "Tags": [ "_hidden", "manage", "questions" ]
 }
