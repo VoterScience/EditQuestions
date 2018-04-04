@@ -110,7 +110,7 @@ export class MyPlugin {
                     viewText += "?\n";
                     var e1 = $("<div class='panel panel-default'>");
                     var eHeading = $("<div class='panel-heading'>").text(text);
-                    eHeading.append("<a class='btn pull-right' onclick='_plugin.onQuestionDelete()' id=" + name + " class='btn' ><i class='glyphicon glyphicon-remove'></i><a/>");
+                    eHeading.append("<a class='btn pull-right' onclick=_plugin.onQuestionDelete('" + name + "') id='" + name + "'><i class='glyphicon glyphicon-remove'></i><a/>");
                     e1.append(eHeading);
 
                     var eBody = $("<div class='panel-body'>");
@@ -263,7 +263,7 @@ export class MyPlugin {
     public onAddmoreQuest(): void {
         this.questIndex++;
         var firstDiv = $("#new0");
-        var newDiv = "<div class='more-question' id='new" + this.questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a style='cursor: pointer;float:right;' onclick='_plugin.onRemoveButton(" + this.questIndex + ")' id='remove[" + this.questIndex + "]' class='btn' ><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + this.questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + this.questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + this.questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
+        var newDiv = "<div class='more-question' id='new" + this.questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a onclick=_plugin.onRemoveButton('" + this.questIndex + "') id='remove[" + this.questIndex + "]' class='btn pull-right'><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + this.questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + this.questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + this.questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
 
         firstDiv.append(newDiv);
     }
@@ -354,7 +354,18 @@ export class MyPlugin {
         $('#as-view').click();
     }
 
-    private onQuestionDelete() {
-        alert('Delete Question');
+    public onQuestionDelete(question: string): void {
+
+        var remove = confirm("Do you wish to delete this question?");
+
+        if (remove) {
+            // delete the question and do the refresh
+            var admin = new trcSheet.SheetAdminClient(this._sheet);
+            admin.postOpDeleteQuestionAsync(question).then(
+                () => {
+                    return this.InitAsync();
+                }
+            );
+        }
     }
 }
