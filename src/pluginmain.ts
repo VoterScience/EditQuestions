@@ -169,6 +169,11 @@ export class MyPlugin {
         MyPlugin.AddAnswer(answers, "Answer3");
         MyPlugin.AddAnswer(answers, "Answer4");
         MyPlugin.AddAnswer(answers, "Answer5");
+        MyPlugin.AddAnswer(answers, "Answer6");
+        MyPlugin.AddAnswer(answers, "Answer7");
+        MyPlugin.AddAnswer(answers, "Answer8");
+        MyPlugin.AddAnswer(answers, "Answer9");
+        MyPlugin.AddAnswer(answers, "Answer10");
 
         var add = this.validateQuestion(qname, qdescr, answers);
 
@@ -248,6 +253,11 @@ export class MyPlugin {
                 MyPlugin.AddAnswer(answers, "Answer3-" + i);
                 MyPlugin.AddAnswer(answers, "Answer4-" + i);
                 MyPlugin.AddAnswer(answers, "Answer5-" + i);
+                MyPlugin.AddAnswer(answers, "Answer6-" + i);
+                MyPlugin.AddAnswer(answers, "Answer7-" + i);
+                MyPlugin.AddAnswer(answers, "Answer8-" + i);
+                MyPlugin.AddAnswer(answers, "Answer9-" + i);
+                MyPlugin.AddAnswer(answers, "Answer10-" + i);
 
                 var add = this.validateQuestion(qname, qdescr, answers);
                 if (add) {
@@ -263,7 +273,23 @@ export class MyPlugin {
     public onAddmoreQuest(): void {
         this.questIndex++;
         var firstDiv = $("#new0");
-        var newDiv = "<div class='more-question' id='new" + this.questIndex + "'><hr style='border-top: 1px solid #8c8b8b;'><a onclick=_plugin.onRemoveButton('" + this.questIndex + "') id='remove[" + this.questIndex + "]' class='btn pull-right'><i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + this.questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p><p><input id='qdescr" + this.questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p><p>Possible Answers:</p><ul><li><input id='Answer1-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer2-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer3-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer4-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/><li><input id='Answer5-" + this.questIndex + "' placeholder='(answer)' size='40'></li></ul></div><div>";
+        var newDiv = "<div class='more-question' id='new" + this.questIndex + "'>" + 
+        "<hr style='border-top: 1px solid #8c8b8b;'><a onclick=_plugin.onRemoveButton('" + this.questIndex + "') id='remove[" + this.questIndex + "]' class='btn pull-right'>" + 
+        "<i class='glyphicon glyphicon-remove'></i><a/><p><input id='qname" + this.questIndex + "' placeholder='(slug)'> (required, Short name, made of just A-Z,0-9,_ ) </p>" + 
+        "<p><input id='qdescr" + this.questIndex + "' placeholder='(description)' size=80> (optional, Human readable description)</p>" + 
+        "<p>Possible Answers:</p>" + 
+        "<ul>" + 
+        "<li><input id='Answer1-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer2-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer3-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer4-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer5-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer6-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer7-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer8-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer9-" + this.questIndex + "' placeholder='(answer)' size='40'></li><br/>" + 
+        "<li><input id='Answer10-" + this.questIndex + "' placeholder='(answer)' size='40'></li>" + 
+        "</ul></div><div>";
 
         firstDiv.append(newDiv);
     }
@@ -289,7 +315,7 @@ export class MyPlugin {
                 }
 
                 e1 += '\n';
-                for (var j = 1; j <= 5; j++) {
+                for (var j = 1; j <= 10; j++) {
 
                     var ans = $("#Answer" + j + "-" + i).val();
                     if (ans) {
