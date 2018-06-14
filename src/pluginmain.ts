@@ -83,8 +83,35 @@ export class MyPlugin {
         });
     }
 
+    // Required columns 
+    private _required : string[] = [ "RecId", "FirstName", "LastName",  "Gender", "Birthday", "Address",
+    "City", "Lat", "Long", "Party", "ResultOfContact" ];
+
+    // Warn if this sheet is missing any required columns 
+    public checkRequired(info: trcSheet.ISheetInfoResult): void {
+
+        var missing = null;
+
+        for(var i in this._required) {
+            var requiredName : string = this._required[i];
+            if (info.Columns.find( x=> x.Name == requiredName) == undefined) {
+                if (missing == null) {
+                    missing = requiredName;
+                } else {
+                    missing += ", " + requiredName;
+                }
+            }
+        }
+
+        if (missing != null) {
+            showError("Warning! This sheet is missing required columns and may not work on mobile devices: " + missing);
+        }
+    }
+
     // Display sheet info on HTML page
     public updateInfo(info: trcSheet.ISheetInfoResult): void {
+        this.checkRequired(info);
+        
         $("#existing").html("");
         var root = $("#existing");
         var readOnly = $("#viewText");
