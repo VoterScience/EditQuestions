@@ -108,6 +108,19 @@ export class MyPlugin {
         }
     }
 
+    // Are we allowed to edit this column? 
+    protected allowEditing(c : trcSheet.IColumnInfo) : boolean{
+        if (c.IsReadOnly) {
+            return false;
+        }
+        // Don't allow editing / removing Party column since it's required and has a strict format.
+        // They can edit ResultOfContact if they want to change the possible values.
+        if (c.Name == "Party") {
+            return false;
+        }
+        return true;
+    }
+
     // Display sheet info on HTML page
     public updateInfo(info: trcSheet.ISheetInfoResult): void {
         this.checkRequired(info);
@@ -121,7 +134,7 @@ export class MyPlugin {
             var c = info.Columns[i];
 
             var viewText = '';
-            if (!c.IsReadOnly) {
+            if (this.allowEditing(c)) {
                 var name = c.Name; // Api name
                 var desc = c.Description; // maybe missing
                 var answers = c.PossibleValues; // Possible values
@@ -136,6 +149,9 @@ export class MyPlugin {
                     }
                     viewText += "?\n";
                     var e1 = $("<div class='panel panel-default'>");
+                    if (name == "ResultOfContact") {
+                        text += " [REQUIRED!]";
+                    }
                     var eHeading = $("<div class='panel-heading'>").text(text);
                     eHeading.append("<a class='btn pull-right' onclick=_plugin.onQuestionDelete('" + name + "') id='" + name + "'><i class='glyphicon glyphicon-remove'></i><a/>");
                     e1.append(eHeading);
