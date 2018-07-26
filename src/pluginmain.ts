@@ -77,6 +77,14 @@ export class MyPlugin {
 
 
             return this._sheet.getInfoAsync().then(info => {
+
+                if (!!info.ParentId) {   
+                    // Give a useful error immediately upfront, before they submit questions to the server.
+                    var msg = "You can only edit questions on the top-level sheet."
+                    alert (msg);
+                    throw msg;
+                }
+
                 this._info = info;
                 this.updateInfo(info);
             });
