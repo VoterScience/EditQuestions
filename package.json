@@ -7,10 +7,10 @@
     "test": "tests"
   },
   "dependencies": {
+    "trc-core": "^1.0.0",
     "trc-httpshim": "^1.0.0",
-    "trc-core" : "^1.0.0",  
-    "trc-sheet" : "^1.4.0",
-    "trc-web" : "^1.0.0"
+    "trc-sheet": "file:../../LibsTS/TrcLibNpm2/3_trcsheet/trc-sheet-1.13.0.tgz",
+    "trc-web": "^1.0.0"
   },
   "devDependencies": {
     "browserify": "^13.1.0",

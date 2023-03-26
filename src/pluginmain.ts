@@ -237,7 +237,7 @@ export class MyPlugin {
         }
     }
 
-    private validateQuestion(qname: string, qdescr: string, answers: any): any {
+    private validateQuestion(qname: string, qdescr: string, answers: string[]): trcSheet.IMaintenanceAddColumn {
         // Validate slug doesn't already exist
         for (var i in this._info.Columns) {
 
@@ -273,7 +273,7 @@ export class MyPlugin {
         }
     }
 
-    private AddQuestionInSheet(questions: any) {
+    private AddQuestionInSheet(questions: trcSheet.IMaintenanceAddColumn[]) {
         // Actually add the question and do the refresh
         var admin = new trcSheet.SheetAdminClient(this._sheet);
         admin.postOpAddQuestionAsync(questions).then(
@@ -286,7 +286,7 @@ export class MyPlugin {
 
     public onAddMultipleQuestion(): void {
 
-        let questions = new Array();
+        let questions : trcSheet.IMaintenanceAddColumn[] = new Array();
         for (let i: number = 0; i <= this.questIndex; i++) {
             if ($('div#new' + i).length == 1) {
                 var answers: string[] = [];
