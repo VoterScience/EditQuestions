@@ -29,6 +29,7 @@ export class MyPlugin {
     private _info: trcSheet.ISheetInfoResult;
     private questIndex: number;
 
+   
     public static BrowserEntryAsync(
         auth: plugin.IStart,
         opts: plugin.IPluginOptions
@@ -78,9 +79,18 @@ export class MyPlugin {
 
             return this._sheet.getInfoAsync().then(info => {
 
+                var msg : string = null;
                 if (!!info.ParentId) {   
                     // Give a useful error immediately upfront, before they submit questions to the server.
-                    var msg = "You can only edit questions on the top-level sheet."
+                    msg = "You can only edit questions on the top-level sheet."
+                } else if (!!info.SurveyId)
+                {
+                    msg = "This sheet is bound to survey '" + info.SurveyId +"'. Can't edit the questions.";
+                } 
+                // Permission issue? - we'll get the error at runtime when we edit the sheet. 
+
+                if (msg)
+                {
                     alert (msg);
                     throw msg;
                 }
@@ -92,8 +102,13 @@ export class MyPlugin {
     }
 
     // Required columns 
-    private _required : string[] = [ "RecId", "FirstName", "LastName",  "Gender", "Birthday", "Address",
-    "City", "Lat", "Long", "Party", "ResultOfContact" ];
+    private _required : string[] = [ 
+        // These will always be present on sheets anyways. 
+        /*
+        "RecId", "FirstName", "LastName",  "Gender", "Birthday", "Address",
+    "City", "Lat", "Long", "Party", */
+
+    "ResultOfContact" ];
 
     // Warn if this sheet is missing any required columns 
     public checkRequired(info: trcSheet.ISheetInfoResult): void {
@@ -281,7 +296,9 @@ export class MyPlugin {
 
                 return this.InitAsync();
             }
-        );
+        ).catch(error => {
+            alert("Can't add: " + error.Message);
+        });
     }
 
     public onAddMultipleQuestion(): void {
@@ -442,7 +459,9 @@ export class MyPlugin {
                 () => {
                     return this.InitAsync();
                 }
-            );
+            ).catch(error => {
+                alert("Can't delete: " + error.Message);
+            });
         }
     }
 }
