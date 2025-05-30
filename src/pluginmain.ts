@@ -86,7 +86,10 @@ export class MyPlugin {
                 } else if (!!info.SurveyId)
                 {
                     msg = "This sheet is bound to survey '" + info.SurveyId +"'. Can't edit the questions.";
-                } 
+                } else if (!!info.SyncStatus && info.SyncStatus.Kind == "Salesforce")
+                {
+                    msg = "These questions are bound to salesforce and can't be changed. Create a new sheet.";
+                }
                 // Permission issue? - we'll get the error at runtime when we edit the sheet. 
 
                 if (msg)
